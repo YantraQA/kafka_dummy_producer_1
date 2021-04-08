@@ -1,16 +1,12 @@
 package com.yantraQA;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 import com.yantraQA.model.Notification;
 import com.yantraQA.model.NotificationType;
-import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -28,7 +24,6 @@ public class EventProducer {
         header.put("Content-Type","application/json");
 
         String topicName = "notification"; // this could be sent while triggering the container
-
         int timeOutInSec=1000;
         for (int i=0;i<timeOutInSec;i++){
             Long id = Long.parseLong(fakeValuesService.numerify("#############"));
@@ -48,8 +43,5 @@ public class EventProducer {
             log.info("Kafka Response Code: " + code + " for log id: " + id);
             Thread.sleep(1000);
         }
-
-
-
     }
 }
