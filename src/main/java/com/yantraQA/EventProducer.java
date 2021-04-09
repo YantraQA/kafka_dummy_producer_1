@@ -39,7 +39,7 @@ public class EventProducer {
                 int code = given()
                         .headers(header).body(bodyString)
                         .when()
-                        .post("http://kafka_producer_client_notification_api:8082/notification/send").getStatusCode();
+                        .post("http://localhost:8082/notification/send").getStatusCode();
 
                 log.info("Kafka Response Code: " + code + " for log id: " + id);
                 Thread.sleep(1000);
