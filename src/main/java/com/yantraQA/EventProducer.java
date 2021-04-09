@@ -26,22 +26,29 @@ public class EventProducer {
         String topicName = "notification"; // this could be sent while triggering the container
         int timeOutInSec=1000;
         for (int i=0;i<timeOutInSec;i++){
-            Long id = Long.parseLong(fakeValuesService.numerify("#############"));
-            String content = (new Date()) + fakeValuesService.letterify("-DummyLogEvent-?????????????");
-            NotificationType type = NotificationType.INFO;
+            try{
+                Long id = Long.parseLong(fakeValuesService.numerify("#############"));
+                String content = (new Date()) + fakeValuesService.letterify("-DummyLogEvent-?????????????");
+                NotificationType type = NotificationType.INFO;
 
-            Notification notification = new Notification(id, topicName,content,type);
+                Notification notification = new Notification(id, topicName,content,type);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String bodyString = objectMapper.writeValueAsString(notification);
+                ObjectMapper objectMapper = new ObjectMapper();
+                String bodyString = objectMapper.writeValueAsString(notification);
 
-            int code = given()
-                    .headers(header).body(bodyString)
-                    .when()
-                    .post("http://localhost:8082/notification/send").getStatusCode();
+                int code = given()
+                        .headers(header).body(bodyString)
+                        .when()
+                        .post("http://kafka_producer_client_notification_api:8082/notification/send").getStatusCode();
 
-            log.info("Kafka Response Code: " + code + " for log id: " + id);
-            Thread.sleep(1000);
+                log.info("Kafka Response Code: " + code + " for log id: " + id);
+                Thread.sleep(1000);
+            }catch(Exception e){
+                Thread.sleep(1000);
+                log.fatal("Exception thrown");
+                e.printStackTrace();
+            }
+
         }
     }
 }
