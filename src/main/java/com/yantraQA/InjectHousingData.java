@@ -1,7 +1,9 @@
 package com.yantraQA;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 import com.yantraQA.model.HouseData;
@@ -37,9 +39,14 @@ public class InjectHousingData {
         for (int i=1;i<_records_house_data.size();i++){
             try{
                 log.info("Trying Injecting Seq number: " + i + " (waiting for response...)");
-                Msg msgObj = new Msg(_records_house_data.get(i));
+                //Msg msgObj = new Msg(_records_house_data.get(i));
                 ObjectMapper objectMapper = new ObjectMapper();
-                String bodyString = objectMapper.writeValueAsString(msgObj).replace("_1stFlrSF","1stFlrSF").replace("_2ndFlrSF","2ndFlrSF").replace("_3SsnPorch","3SsnPorch");
+                objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+                objectMapper.setPropertyNamingStrategy(new MyNamingStrategy());
+                objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+                //String bodyString = objectMapper.writeValueAsString(msgObj).replace("_1stFlrSF","1stFlrSF").replace("_2ndFlrSF","2ndFlrSF").replace("_3SsnPorch","3SsnPorch");
+                String bodyString = objectMapper.writeValueAsString(_records_house_data.get(i));
+
                 log.info(bodyString);
                 int code = given()
                         .headers(header).body(bodyString)
